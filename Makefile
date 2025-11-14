@@ -3,11 +3,15 @@ KERNEL_IMAGE := ./lunar/lunar
 ISO_ROOT := tools/testing/iso
 ISO_OUTPUT := tools/testing/lunar.iso
 
+.PHONY: kernel kmenuconfig iso clean
+
+kernel:
+	make -C lunar all
+
 kmenuconfig:
 	make -C lunar menuconfig
 
-iso:
-	make -C lunar all
+iso: kernel
 	@cp $(KERNEL_IMAGE) $(ISO_ROOT)
 	@xorriso -as mkisofs -b boot/limine/limine-bios-cd.bin -no-emul-boot \
 		-no-emul-boot -boot-load-size 4 -boot-info-table --efi-boot boot/limine/limine-uefi-cd.bin \
